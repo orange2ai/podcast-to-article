@@ -1,0 +1,76 @@
+# 播客转文章 · podcast-to-article
+
+把一个多人对谈播客的逐字稿，整理成能直接发的长文。
+
+逐字稿的轴是**发言人和时间**，文章的轴是**话题和判断**。这个 skill 做的就是换轴。
+
+## 为什么需要它
+
+直接让模型「把逐字稿写成文章」，出来的一般是两种东西。
+
+一种是记流水账，满篇「张三说……李四说……王五说……」，读起来像会议纪要。另一种是抽象化，数字和细节全丢了，换成一堆「行业正在加速」「生态逐渐成熟」，很顺，但没有一句是新信息。
+
+所以规矩是双向的：**拆掉发言人的脚手架，保留事实的颗粒度。**
+
+## 实测效果
+
+一份 7569 字的发言人为轴原始稿，经过这套流程变成 5048 字、52 段的发布稿（字数砍 33%，段落从 65 减到 52），作者的评价是「广受好评」。
+
+自检脚本跑出来：破折号 0、对举句 0、总结腔 0、序数词小标题 0、动词名词化 0、段首零回指评论 0。只在「一句话概括：」那一处提示性冒号上翻车一次。
+
+## 安装
+
+```bash
+git clone https://github.com/orange2ai/podcast-to-article.git
+ln -s "$(pwd)/podcast-to-article" ~/.cola/skills/podcast-to-article   # Cola
+# 其他 agent：把整个目录放进它的 skills / rules 目录，指向 SKILL.md 即可
+```
+
+`SKILL.md` 是给 agent 读的说明书，除此之外没有任何平台依赖，纯 python3 标准库。
+
+## 用法
+
+对 agent 说：
+
+> 这是这期播客的逐字稿，按 Next Token 的格式整理成一篇文章
+
+它会走六步：清稿 → 要点梳理 → 换轴成文 → 人名校准 → 精简 → 自检。
+
+两个脚本也可以单独用：
+
+```bash
+# 字幕清洗：去时间轴、按说话人合并成段、报统计
+python3 scripts/prep_transcript.py 第004期.srt -o 清洗稿.md
+python3 scripts/prep_transcript.py 第004期.srt --speakers   # 只列说话人
+
+# 成稿自检：AI 痕迹逐条命中数 + 人类基准对照
+python3 scripts/check_style.py 成稿.md
+```
+
+支持 SRT、VTT，以及已转成 md / txt 的转写稿（带 `**发言人：**` 标记的也能识别）。
+
+## 目录
+
+```
+SKILL.md                       流程与判据（agent 的主入口）
+references/style-rules.md      语言硬约束，每条附人类/AI 实测基准
+references/example.md          同一段逐字稿的两次处理，原始稿对照成稿
+scripts/prep_transcript.py     字幕清洗
+scripts/check_style.py         成稿自检
+```
+
+## 规则从哪来
+
+语言那部分的数值来自 [lieflat-less-ai-tone](https://github.com/larashero3-dotcom/lieflat-less-ai-tone)（MIT）的对照语料研究：300 篇五模型生成文本加 329 篇人类写作，629 篇、95,551 句、45,721 段。它检验了 26 项候选特征，只留下真有区分力的。
+
+其中三条和网上流传的说法正好相反，值得单独看一眼：
+
+- 人类用比喻是 AI 的 **2.4 倍**。不要为了「像人」而回避比喻。
+- 正文设问，人类每千字 1.83 处，AI 0.10 处，差 **17 倍**。少写设问才是 AI 味。
+- 句长均匀度 0.87，**没有差异**。强行打乱句长没有用。
+
+流程和人名规则来自 Next Token 播客的实际改稿过程（第四期 Muse 那一篇）。
+
+## 许可
+
+MIT
