@@ -4,6 +4,8 @@ Turn a podcast transcript into a publishable long-form article. Multi-speaker pa
 
 A transcript is organized around **who spoke and when**. An article is organized around **what the topic is and what the takeaway is**. This skill does that re-axis.
 
+![Cover: hand-drawn microphone and headphones](./assets/cover.jpg)
+
 ## The problem it solves
 
 Ask a model to "write the transcript up as an article" and you get one of three failures. It keeps the relay structure ("Alice said… Bob said… Carol said…") and reads like meeting minutes. Or it abstracts everything away — no numbers, no product details, just smooth sentences carrying no new information. The third is hardest to spot: **over-rewriting**. The guest's own words get flattened into third-person summary, "he said" becomes a plain statement, and the piece reads like a reporter's second-hand account instead of a person talking.
