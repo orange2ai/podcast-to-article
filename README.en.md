@@ -28,7 +28,7 @@ python3 scripts/check_style.py draft.md                        # AI-tone self-ch
 
 Then ask your agent: *"turn this transcript into an article, Next Token style"*. It walks seven steps: clean → fact ledger → fix the through-line → re-axis into sections (quoting the original) → attribute names correctly → cut → self-check.
 
-The checker also reports direct-quote share (20-40% for interview-style pieces) and the share of paragraphs that open with a self-contained assertion (keep it ≤30%).
+The checker also reports direct-quote share (10-28% for interview-style pieces) and the share of paragraphs that open with a self-contained assertion (keep it ≤30%).
 
 Supports SRT, VTT, and pre-converted `.md` / `.txt` transcripts (including `**Speaker:**` markers).
 

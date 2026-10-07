@@ -53,7 +53,8 @@ STRUCT_HUMAN = {
 }
 
 # 段首自足判断句：主谓完整的论断，不接上文。实录体里这类段首一多，全篇读起来像口号集。
-ASSERT_START = re.compile(r"^[^，。！？；\n“”\"：]{2,14}(?:是|不是|在|有|没有|会|能|要|应该|等于|属于)")
+# 关键词只收“是/不是/就是/在于”这种判断词：“能吃/要有”这类太松，会把“聊到能力边界”误报成断言。
+ASSERT_START = re.compile(r"^[^，。！？；\n“”\"：]{2,14}(?:是|不是|就是|在于|等于|属于)")
 # 直接引语（中英文引号都算，引号内至少两个字）
 QUOTE = re.compile(r"[“\"]([^”\"]{2,})[”\"]")
 
@@ -147,12 +148,12 @@ def main():
             for item in count[:6]:
                 shown = item[-1] if isinstance(item, tuple) else item
                 print(f"      · {shown[:70]}")
-    # 引语：记者式实录的肉。占比太低说明原话被改写成概述了。
+    # 引语：记者式实录的肉。太低说明原话被改写成了概述，太高说明每句话都上了引号。
     quotes = QUOTE.findall(text)
     quote_zh = sum(zh(q) for q in quotes)
     qp = quote_zh / n * 100
-    qv = OK if 15 <= qp <= 45 else WARN
-    print(f"\n{'直接引语汉字占比%':<22}本稿 {qp:>6.2f}   参考 20-40   {'':>5}   {qv}（{len(quotes)} 处）")
+    qv = OK if 10 <= qp <= 28 else WARN
+    print(f"\n{'直接引语汉字占比%':<22}本稿 {qp:>6.2f}   参考 10-28   {'':>5}   {qv}（{len(quotes)} 处）")
 
     # 段首自足判断句
     asserts = []

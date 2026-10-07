@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>播客转文章 · 公众号封面（21:9）</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #2b2b2b;
+    font-family: -apple-system, "PingFang SC", sans-serif;
+  }
+  .note {
+    color: #8d8d8d;
+    font-size: 12px;
+    padding: 10px 16px;
+    line-height: 1.7;
+  }
+  .note b { color: #d8d8d8; font-weight: 600; }
+
+  /* 成品区：1260 × 540 = 21:9，2x 屏导出即 2520 宽 */
+  .stage {
+    position: relative;
+    width: 1260px;
+    height: 540px;
+    margin: 0 auto 40px;
+    overflow: hidden;
+    background: #f5f0e4;
+    box-shadow: 0 8px 40px rgba(0,0,0,.45);
+  }
+
+  .art { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  .title {
+    position: absolute;
+    left: 92px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-1.2deg);
+    transform-origin: left center;
+    white-space: nowrap;
+    line-height: 1;
+  }
+  .zh {
+    font-family: "Hannotate SC", "HanziPen SC", "Wawati SC", "Yuanti SC",
+                 "PingFang SC", sans-serif;
+    font-size: 118px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #22303f;
+  }
+  .en {
+    font-family: "Bradley Hand", "Snell Roundhand", "HanziPen SC", cursive;
+    font-size: 62px;
+    margin-left: 20px;
+    color: #d96b33;
+    position: relative;
+    top: -6px;
+  }
+  .sub {
+    position: absolute;
+    left: 100px;
+    top: 372px;
+    transform: rotate(-1deg);
+    font-family: "HanziPen SC", "Hannotate SC", "Yuanti SC", sans-serif;
+    font-size: 25px;
+    letter-spacing: 3px;
+    color: #6b7785;
+  }
+</style>
+</head>
+<body>
+
+<div class="note">
+  成品尺寸 <b>1260 × 540（21:9）</b>。导出：右键点下面这块白色区域 →
+  <b>检查</b> → 在 Elements 里选中 <b>.stage</b> → 右键 <b>Capture node screenshot</b>。
+  视网膜屏出来是 2520 × 1080，够公众号用。<br>
+  手写体依赖 macOS 自带的「手札体 / 翩翩体 / 娃娃体」。没有的话会退到苹方，字就变规矩了。
+</div>
+
+<div class="stage" id="stage">
+
+  <svg class="art" viewBox="0 0 1260 540" xmlns="http://www.w3.org/2000/svg"
+       preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <!-- 让过硬的矢量线抖起来：位移噪声 -->
+      <filter id="rough" x="-8%" y="-8%" width="116%" height="116%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.018 0.03"
+                      numOctaves="3" seed="11" result="n"/>
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="4.5"
+                           xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="rough2" x="-8%" y="-8%" width="116%" height="116%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.03 0.045"
+                      numOctaves="2" seed="29" result="n"/>
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="3"
+                           xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <!-- 纸的颗粒 -->
+      <filter id="grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4"
+                      stitchTiles="stitch" result="g"/>
+        <feColorMatrix in="g" type="saturate" values="0"/>
+      </filter>
+      <!-- 纸面不匀的色斑 -->
+      <filter id="blotch">
+        <feTurbulence type="fractalNoise" baseFrequency="0.006 0.008"
+                      numOctaves="3" seed="5" result="b"/>
+        <feColorMatrix in="b" type="saturate" values="0"/>
+      </filter>
+      <!-- 铅笔线的干涩边缘 -->
+      <filter id="pencil" x="-6%" y="-6%" width="112%" height="112%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2"
+                      seed="3" result="t"/>
+        <feColorMatrix in="t" type="saturate" values="0" result="ts"/>
+        <feComposite in="SourceGraphic" in2="ts" operator="in" result="body"/>
+        <feBlend in="body" in2="SourceGraphic" mode="multiply"/>
+      </filter>
+    </defs>
+
+    <!-- 纸底 -->
+    <rect width="1260" height="540" fill="#f5f0e4"/>
+    <rect width="1260" height="540" filter="url(#blotch)" opacity="0.10"
+          style="mix-blend-mode:multiply"/>
+    <rect width="1260" height="540" filter="url(#grain)" opacity="0.07"
+          style="mix-blend-mode:multiply"/>
+
+    <!-- 手绘声波：一排高低不一的竖条，手画的，间距和长短都不齐 -->
+    <g filter="url(#rough2)" stroke-linecap="round">
+      <path d="M84,466 C230,470 420,468 620,464" fill="none"
+            stroke="#22303f" stroke-width="2" opacity="0.3"/>
+      <g stroke="#d96b33" stroke-width="5" opacity="0.9">
+        <path d="M96,452 L94,436"/>
+        <path d="M122,455 L124,428"/>
+        <path d="M148,452 L146,404"/>
+        <path d="M174,456 L176,438"/>
+        <path d="M200,453 L198,416"/>
+        <path d="M226,455 L229,388"/>
+        <path d="M252,452 L250,430"/>
+        <path d="M278,456 L276,444"/>
+        <path d="M304,453 L306,412"/>
+        <path d="M330,455 L328,394"/>
+        <path d="M356,452 L358,432"/>
+        <path d="M382,456 L380,420"/>
+        <path d="M408,453 L407,440"/>
+        <path d="M434,455 L436,400"/>
+        <path d="M460,452 L458,426"/>
+        <path d="M486,456 L488,446"/>
+        <path d="M512,453 L510,418"/>
+        <path d="M538,455 L541,434"/>
+        <path d="M564,452 L562,408"/>
+        <path d="M590,456 L589,442"/>
+        <path d="M614,453 L616,430"/>
+      </g>
+      <circle cx="646" cy="462" r="4.6" fill="#d96b33" stroke="none"/>
+    </g>
+
+    <!-- 手绘麦克风：轮廓描两遍，像铅笔画时来回一样 -->
+    <g filter="url(#rough)" fill="none" stroke="#22303f"
+       stroke-linecap="round" stroke-linejoin="round" transform="rotate(-3 980 270)">
+      <!-- 第一遍 -->
+      <path d="M906,258 C900,180 918,104 968,98 C1018,92 1036,168 1030,246
+               C1026,286 1006,308 968,308 C930,308 911,290 906,258 Z"
+            stroke-width="4.2"/>
+      <!-- 第二遍，稍微歪一点 -->
+      <path d="M912,262 C905,182 922,110 968,103 C1016,96 1031,170 1026,248
+               C1022,288 1004,303 968,303 C934,303 917,288 912,262 Z"
+            stroke-width="2.2" opacity="0.65"/>
+
+      <!-- 网罩的竖线 -->
+      <g stroke-width="2.1" opacity="0.75">
+        <path d="M940,110 C936,170 936,240 940,296"/>
+        <path d="M968,101 C966,165 966,240 968,303"/>
+        <path d="M996,107 C1000,168 1000,240 996,299"/>
+      </g>
+      <!-- 网罩的横线 -->
+      <g stroke-width="2" opacity="0.6">
+        <path d="M914,152 C948,158 990,158 1024,151"/>
+        <path d="M910,196 C946,203 992,203 1028,195"/>
+        <path d="M913,240 C948,247 990,247 1025,239"/>
+      </g>
+
+      <!-- 底座与支架 -->
+      <path d="M948,308 C946,334 944,352 942,372" stroke-width="4"/>
+      <path d="M990,308 C992,334 994,352 996,372" stroke-width="4"/>
+      <path d="M926,374 C950,366 990,366 1012,375 C990,384 950,384 926,374 Z"
+            stroke-width="4" fill="none"/>
+      <path d="M900,388 C940,398 1006,398 1042,386" stroke-width="4"/>
+    </g>
+
+    <!-- 标题下面随手划的一道 -->
+    <g filter="url(#rough2)">
+      <path d="M100,318 C240,310 420,320 556,313" fill="none"
+            stroke="#d96b33" stroke-width="5" stroke-linecap="round" opacity="0.9"/>
+      <path d="M104,326 C250,320 430,328 548,322" fill="none"
+            stroke="#d96b33" stroke-width="2.4" stroke-linecap="round" opacity="0.45"/>
+    </g>
+  </svg>
+
+  <div class="title">
+    <span class="zh">播客转文章</span><span class="en">Skill</span>
+  </div>
+  <div class="sub">录音 → 成稿，一步换轴</div>
+
+</div>
+
+</body>
+</html>
