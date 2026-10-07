@@ -4,7 +4,7 @@ Turn a podcast transcript into a publishable long-form article. Multi-speaker pa
 
 A transcript is organized around **who spoke and when**. An article is organized around **what the topic is and what the takeaway is**. This skill does that re-axis.
 
-![Cover: hand-drawn microphone and headphones](./assets/cover.jpg)
+![podcast-to-article: turn a transcript into an article](./assets/cover.png)
 
 ## The problem it solves
 
