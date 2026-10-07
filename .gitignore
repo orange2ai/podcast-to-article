@@ -1,3 +1,6 @@
 .DS_Store
 __pycache__/
 *.pyc
+
+# 发布素材，不进仓库
+social-post.md
