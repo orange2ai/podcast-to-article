@@ -51,6 +51,11 @@ STRUCT_HUMAN = {
     "比喻起段/百段": 0.38,
 }
 
+# 段首自足判断句：主谓完整的论断，不接上文。实录体里这类段首一多，全篇读起来像口号集。
+ASSERT_START = re.compile(r"^[^，。！？；\n“”\"：]{2,14}(?:是|不是|在|有|没有|会|能|要|应该|等于|属于)")
+# 直接引语（中英文引号都算，引号内至少两个字）
+QUOTE = re.compile(r"[“\"]([^”\"]{2,})[”\"]")
+
 OK, WARN, BAD = "✅", "⚠️", "❌"
 
 
@@ -141,6 +146,32 @@ def main():
             for item in count[:6]:
                 shown = item[-1] if isinstance(item, tuple) else item
                 print(f"      · {shown[:70]}")
+    # 引语：记者式实录的肉。占比太低说明原话被改写成概述了。
+    quotes = QUOTE.findall(text)
+    quote_zh = sum(zh(q) for q in quotes)
+    qp = quote_zh / n * 100
+    qv = OK if 15 <= qp <= 45 else WARN
+    print(f"\n{'直接引语汉字占比%':<22}本稿 {qp:>6.2f}   参考 20-40   {'':>5}   {qv}（{len(quotes)} 处）")
+
+    # 段首自足判断句
+    asserts = []
+    for p in ps:
+        first = re.split(r"[。！？]", p)[0].strip()
+        if not first or first[0] in "“\"":
+            continue
+        if ANAPHOR.match(first) or re.match(r"^(?:他|她|它|他们|我们|你|我|Noah|主持人)", first):
+            continue
+        if re.match(r"^[A-Za-z\u4e00-\u9fff]{2,6}(?:说|问|答|介绍|形容)", first):
+            continue
+        if ASSERT_START.match(first):
+            asserts.append(first)
+    ra = len(asserts) / len(ps) * 100
+    av = OK if ra <= 30 else (WARN if ra <= 50 else BAD)
+    print(f"{'段首自足判断句/段%':<22}本稿 {ra:>6.2f}   参考 <=30   {'':>5}   {av}")
+    if asserts and not args.quiet and av != OK:
+        for s in asserts[:6]:
+            print(f"      · {s[:70]}")
+
     print(f"{'平均段长（汉字）':<22}{n / len(ps):>6.1f}")
 
     print("\n## 结构层")
@@ -160,7 +191,9 @@ def main():
     if warns:
         print(f"{WARN} 需要逐条看一眼（可能是误报）：{'、'.join(warns)}")
     if not fails and not warns:
-        print(f"{OK} 没有需要处理的项目。别忘了人工通读一遍：脚本管不了省略宾语、换同义词、丢材料。")
+        print(f"{OK} 句层没有需要处理的项目。别忘了人工通读一遍：脚本管不了省略宾语、换同义词、丢材料。")
+    print("人工再核四条：每节标题能不能预判内容；随手挑三句引语对着逐字稿核一遍；")
+    print("有没有句子说话人认不出是自己说的；有没有哪一整段回答的是别的问题。")
 
 
 if __name__ == "__main__":
